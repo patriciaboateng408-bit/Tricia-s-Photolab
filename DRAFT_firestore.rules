@@ -1,0 +1,81 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Entity Validations
+    function isValidAlbum(data) {
+      return data.keys().hasAll(['title', 'userId', 'createdAt']) &&
+             data.keys().size() <= 4 && // title, description, userId, createdAt
+             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
+             data.userId == request.auth.uid &&
+             data.createdAt == request.time &&
+             (data.get('description', '') is string && data.get('description', '').size() <= 500);
+    }
+
+    function isValidImage(data) {
+      return data.keys().hasAll(['url', 'albumId', 'userId', 'createdAt']) &&
+             data.keys().size() <= 6 && // url, albumId, userId, createdAt, title, description
+             data.url is string && data.url.size() > 0 && data.url.size() <= 1048576 && // 1MB Limit for Firestore Document
+             data.albumId is string &&
+             data.userId == request.auth.uid &&
+             data.createdAt == request.time &&
+             (data.get('title', '') is string && data.get('title', '').size() <= 100) &&
+             (data.get('description', '') is string && data.get('description', '').size() <= 1000);
+    }
+
+    // Album Rules
+    match /albums/{albumId} {
+      allow get: if isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidAlbum(incoming());
+      allow update: if isOwner(existing().userId) && 
+                      isValidAlbum(incoming()) &&
+                      incoming().userId == existing().userId &&
+                      incoming().createdAt == existing().createdAt &&
+                      incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description']);
+      allow delete: if isOwner(existing().userId);
+    }
+
+    // Image Rules
+    match /images/{imageId} {
+      allow get: if isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && 
+                      isValidImage(incoming()) && 
+                      get(/databases/$(database)/documents/albums/$(incoming().albumId)).data.userId == request.auth.uid;
+      allow update: if isOwner(existing().userId) && 
+                      isValidImage(incoming()) &&
+                      incoming().userId == existing().userId &&
+                      incoming().createdAt == existing().createdAt &&
+                      incoming().albumId == existing().albumId &&
+                      incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description']);
+      allow delete: if isOwner(existing().userId);
+    }
+  }
+}

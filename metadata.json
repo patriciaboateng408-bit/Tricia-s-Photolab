@@ -1,0 +1,6 @@
+{
+  "name": "Lumina Gallery",
+  "description": "A modern, minimal photo gallery with albums, fullscreen viewing, and metadata management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
