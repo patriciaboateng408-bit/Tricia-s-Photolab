@@ -51,12 +51,14 @@ export function AlbumManager({ user }: AlbumManagerProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="rounded-xl border-zinc-200 hover:bg-zinc-50">
-          <FolderPlus className="w-4 h-4 mr-2" />
-          New Album
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button variant="outline" className="rounded-xl border-zinc-200 hover:bg-zinc-50">
+            <FolderPlus className="w-4 h-4 mr-2" />
+            New Album
+          </Button>
+        }
+      />
       <DialogContent className="sm:max-w-[425px] rounded-3xl">
         <form onSubmit={handleCreateAlbum}>
           <DialogHeader>

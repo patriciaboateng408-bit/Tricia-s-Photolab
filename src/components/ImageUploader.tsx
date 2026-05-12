@@ -138,12 +138,14 @@ export function ImageUploader({ user, albums, activeAlbumId }: ImageUploaderProp
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-zinc-900 text-zinc-50 rounded-xl hover:bg-zinc-800 transition-all active:scale-95">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Photos
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button className="bg-zinc-900 text-zinc-50 rounded-xl hover:bg-zinc-800 transition-all active:scale-95">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Photos
+          </Button>
+        }
+      />
       <DialogContent className="sm:max-w-[500px] rounded-3xl">
         <DialogHeader>
           <DialogTitle>Upload Photos</DialogTitle>

@@ -154,11 +154,13 @@ export function ImageGrid({ images, loading, user, sortBy }: ImageGridProps) {
                 </div>
                 
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg shrink-0">
-                      <MoreVertical className="w-4 h-4 text-zinc-400" />
-                    </Button>
-                  </DropdownMenuTrigger>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg shrink-0">
+                        <MoreVertical className="w-4 h-4 text-zinc-400" />
+                      </Button>
+                    }
+                  />
                   <DropdownMenuContent align="end" className="rounded-xl w-40">
                     <DropdownMenuItem 
                       onClick={() => {

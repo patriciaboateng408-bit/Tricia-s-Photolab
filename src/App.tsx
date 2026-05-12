@@ -74,7 +74,7 @@ export default function App() {
               </div>
             </div>
             <div className="space-y-2">
-              <h1 className="text-4xl font-semibold tracking-tight">Photo Gallery</h1>
+              <h1 className="text-4xl font-semibold tracking-tight">Pavan Gallery</h1>
               <p className="text-zinc-500">
                 A clean, minimal space for your memories. Upload, organize, and view your photos in high resolution.
               </p>
@@ -97,7 +97,7 @@ export default function App() {
                 <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center">
                   <ImageIcon className="w-5 h-5 text-zinc-50" />
                 </div>
-                <span className="font-semibold text-lg hidden sm:block">Gallery</span>
+                <span className="font-semibold text-lg hidden sm:block">Pavan Gallery</span>
               </div>
               
               <div className="flex items-center gap-4">
